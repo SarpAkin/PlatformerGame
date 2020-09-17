@@ -8,6 +8,10 @@ Vector2::Vector2(int x,int y)
     this->x = x;
     this->y = y;
 }
+Vector2::Vector2()
+{
+    //leave empty
+}
 
 float distance(Vector2 a,Vector2 b)
 {

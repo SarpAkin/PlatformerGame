@@ -4,16 +4,20 @@
 #include <array>
 #include "Vector2.h"
 
+#define Debug 1
+
 class Game;
 class Entity
 {
-public://variables
+    public://variables
     Vector2 cord;
     Vector2 size;
     Vector2 velocity;
-    std::array<Force,2> forces;//0 gravity 1 movement
-    float weight;
-public://functions
+    std::array<Vector2,2> forces;//0 gravity 1 movement
+    float inversemass = 0;
+    private:
+    float mass = 1;
+    public://functions
     inline Vector2 GetPivot()
     {
         return size / 2;
@@ -21,6 +25,18 @@ public://functions
     inline Vector2 GetMidPoint()
     {
         return cord + size / 2;
+    }
+    inline void setMass(float m)
+    {
+        mass = m;
+        if(m == 0)
+            inversemass = 0;
+        else
+            inversemass = 1 / m;
+    }
+    inline float getMass()
+    {
+        return mass;
     }
     Entity(Vector2 c,Vector2 s);
     virtual void tick(Game& game,float elapsedTime);

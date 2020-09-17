@@ -1,9 +1,17 @@
 #include "PhysicsEngine.h"
 
-
-void simulateEntities(std::vector<Entity*>& Entities)
+inline void simulateEntity(Entity* e,float deltaT)
 {
-    
+    Vector2 totalStaticForce = e->forces[0] + e->forces[1];
+    e->velocity = (totalStaticForce - e->velocity) * deltaT * e->inversemass + e->velocity; 
+    e->cord = e->cord + e->velocity * deltaT;
+}
+void simulateEntities(std::vector<Entity*>& Entities,float deltaT)
+{
+    for(Entity* e : Entities)
+    {
+        simulateEntity(e,deltaT);
+    }
 }
 bool isOverLapping(const Entity& a,const Entity& b)
 {

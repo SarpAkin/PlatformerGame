@@ -1,11 +1,14 @@
 #include "Game.h"
 #include "PhysicsEngine.h"
+#include "Entities\Player.h"
 bool Game::OnUserCreate()
 {
     sAppName = "PlatformerGame";
-    Entities.push_back(new Entity(Vector2(0,0),Vector2(1,1)));
-    Entities[0]->forces[0] = Vector2(0.69f,0.420f);
-    Entities[0]->setMass(50);
+    Entities.push_back(new Player(Vector2(0,0),Vector2(1,1)));
+    Entities[0]->setMass(.5f);
+
+    Entities.push_back(new Entity(Vector2(10,10),Vector2(3,3)));
+    Entities[1]->setMass(0);
     return true;
 }
 

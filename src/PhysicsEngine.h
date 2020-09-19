@@ -6,6 +6,6 @@
 #include "Vector2.h"
 
 void simulateEntities(std::vector<Entity*>& Entities,float t);
-bool isOverLapping(const Entity& a,const Entity& b);
+bool isOverLapping(const AABB& a,const AABB& b);
 
 #endif

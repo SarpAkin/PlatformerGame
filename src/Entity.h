@@ -10,8 +10,7 @@ class Game;
 class Entity
 {
     public://variables
-    Vector2 cord;
-    Vector2 size;
+    AABB boundry;
     Vector2 velocity;
     std::array<Vector2,2> forces;//0 gravity 1 movement
     float inversemass = 0;
@@ -20,11 +19,11 @@ class Entity
     public://functions
     inline Vector2 GetPivot()
     {
-        return size / 2;
+        return boundry.size / 2;
     }
     inline Vector2 GetMidPoint()
     {
-        return cord + size / 2;
+        return boundry.cord + boundry.size / 2;
     }
     inline void setMass(float m)
     {
@@ -39,6 +38,7 @@ class Entity
         return mass;
     }
     Entity(Vector2 c,Vector2 s);
+    Entity();
     virtual void tick(Game& game,float elapsedTime);
     virtual void draw(Game& game);
 };

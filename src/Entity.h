@@ -12,8 +12,11 @@ class Entity
     public://variables
     AABB boundry;
     Vector2 velocity;
+    Vector2 acceleration;
     std::array<Vector2,2> forces;//0 gravity 1 movement
     float inversemass = 0;
+    float bouncieness = 1.0f;
+    float drag = 1.0f;
     private:
     float mass = 1;
     public://functions

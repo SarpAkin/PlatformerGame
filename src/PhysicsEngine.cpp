@@ -2,50 +2,72 @@
 #include "Vector2.h"
 #include <iostream>
 
-inline void simulateColidingEntity(Entity* current,Entity* other)
+inline void simulateColidingEntity(Entity* current,Entity* other,float deltaT)
 {
     Vector2 cordDiff = current->boundry.GetCenterPoint() - other->boundry.GetCenterPoint();
     Vector2 sizeSum = (current->boundry.size + other->boundry.size) / 2;
     Vector2 AbsCollisionDepth = sizeSum - Vector2(std::abs(cordDiff.x),std::abs(cordDiff.y));
 
+    Vector2 totalDisplacement;
     if(AbsCollisionDepth.x > AbsCollisionDepth.y)
         if(cordDiff.y > 0)
-            current->boundry.cord.y += AbsCollisionDepth.y;
+            totalDisplacement.y = AbsCollisionDepth.y;
         else
-            current->boundry.cord.y -= AbsCollisionDepth.y;
+            totalDisplacement.y = -AbsCollisionDepth.y;
     else
         if(cordDiff.x > 0)
-            current->boundry.cord.x += AbsCollisionDepth.x;
+            totalDisplacement.x = AbsCollisionDepth.x;
         else
-            current->boundry.cord.x -= AbsCollisionDepth.x;
+            totalDisplacement.x = -AbsCollisionDepth.x;
 
+    totalDisplacement += totalDisplacement * (((current->bouncieness + other->bouncieness) / 2 - 1) / deltaT);
+
+    if(other->inversemass == 0)
+        current->boundry.cord += totalDisplacement;
+    else if(current->inversemass == 0)
+        other->boundry.cord += totalDisplacement;
+    else
+    {
+        float totalmass = current->getMass() + other->getMass();
+        current->boundry.cord += totalDisplacement * (other->getMass() / totalmass);
+        other->boundry.cord += totalDisplacement * (current->getMass() / totalmass);
+    }
 }
+
 void simulateEntities(std::vector<Entity*>& Entities,float deltaT)
 {
     if(deltaT == 0)//if delta is 0 it causes bugs
         return;
     for(int i = 0;i < Entities.size();i++)
     {
-        Vector2 totalStaticForce = Entities[i]->forces[0] + Entities[i]->forces[1];
-        Entities[i]->velocity += (totalStaticForce - Entities[i]->velocity) * deltaT * Entities[i]->inversemass;
-        Vector2 startingCord = Entities[i]->boundry.cord;
-        Entities[i]->boundry.cord += Entities[i]->velocity * deltaT;
+        Entity* current = Entities[i];
+        if(current->inversemass == 0)
+            continue;
+        Vector2 totalStaticForce = current->forces[0] + current->forces[1];
+        Vector2 acceleration = current->velocity * -current->drag + totalStaticForce;
+        current->velocity += acceleration * deltaT;
+        Vector2 startingCord = current->boundry.cord;
+        current->boundry.cord += current->velocity * deltaT;
         
         for(int j = 0;j < i;j++)
         {
-            if(isOverLapping(Entities[i]->boundry,Entities[j]->boundry))
+            if(isOverLapping(current->boundry,Entities[j]->boundry))
             {
-                simulateColidingEntity(Entities[i],Entities[j]);
+                simulateColidingEntity(current,Entities[j],deltaT);
             }
         }
         for(int j = i + 1;j < Entities.size();j++)
         {
-            if(isOverLapping(Entities[i]->boundry,Entities[j]->boundry))
+            if(isOverLapping(current->boundry,Entities[j]->boundry))
             {
-                simulateColidingEntity(Entities[i],Entities[j]);
+                simulateColidingEntity(current,Entities[j],deltaT);
             }
         }
-        Entities[i]->velocity = (Entities[i]->boundry.cord - startingCord) / deltaT;
+        current->velocity = (current->boundry.cord - startingCord) / deltaT;
+        if(std::abs(current->velocity.x) < 0.1f && std::abs(totalStaticForce.x) < 0.1f)
+            current->velocity.x = 0;
+        if(std::abs(current->velocity.y) < 0.1f && std::abs(totalStaticForce.y) < 0.1f)
+            current->velocity.y = 0;
     }
 }
 bool isOverLapping(const AABB& a,const AABB& b)

@@ -4,7 +4,7 @@
 
 void Player::tick(Game& game,float elapsedTime)
 {
-    std::cout << "velocity : " << velocity.x << " " << velocity.y << std::endl;
+    //std::cout << "velocity : " << velocity.x << " " << velocity.y << std::endl;
     //std::cout << "cord :" << boundry.cord.x << " " << boundry.cord.y << std::endl; 
     if(game.GetKey(olc::Key::W).bHeld)
         forces[1].y = -speed;

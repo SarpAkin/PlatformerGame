@@ -4,8 +4,9 @@
 
 inline void simulateColidingEntity(Entity* current,Entity* other,float deltaT)
 {
-    Vector2 cordDiff = current->boundry.GetCenterPoint() - other->boundry.GetCenterPoint();
-    Vector2 sizeSum = (current->boundry.size + other->boundry.size) / 2;
+
+    Vector2 cordDiff = current->GetMidPoint() - other->GetMidPoint();
+    Vector2 sizeSum = (current->size + other->size) / 2;
     Vector2 AbsCollisionDepth = sizeSum - Vector2(std::abs(cordDiff.x),std::abs(cordDiff.y));
 
     Vector2 totalDisplacement;
@@ -23,52 +24,69 @@ inline void simulateColidingEntity(Entity* current,Entity* other,float deltaT)
     totalDisplacement += totalDisplacement * (((current->bouncieness + other->bouncieness) / 2 - 1) / deltaT);
 
     if(other->inversemass == 0)
-        current->boundry.cord += totalDisplacement;
+        current->rcord.pivot += totalDisplacement;
     else if(current->inversemass == 0)
-        other->boundry.cord += totalDisplacement;
+        other->rcord.pivot += totalDisplacement;
     else
     {
         float totalmass = current->getMass() + other->getMass();
-        current->boundry.cord += totalDisplacement * (other->getMass() / totalmass);
-        other->boundry.cord += totalDisplacement * (current->getMass() / totalmass);
+        current->rcord.pivot += totalDisplacement * (other->getMass() / totalmass);
+        other->rcord.pivot += totalDisplacement * (current->getMass() / totalmass);
     }
 }
 
-void simulateEntities(std::vector<Entity*>& Entities,float deltaT)
+void simulateEntities(std::vector<Entity*>& Entities,std::vector<Collision_Trigger*> triggers,float deltaT)
 {
     if(deltaT == 0)//if delta is 0 it causes bugs
         return;
     for(int i = 0;i < Entities.size();i++)
     {
         Entity* current = Entities[i];
-        if(current->inversemass == 0)
-            continue;
-        Vector2 totalStaticForce = current->forces[0] + current->forces[1];
-        Vector2 acceleration = current->velocity * -current->drag + totalStaticForce;
-        current->velocity += acceleration * deltaT;
-        Vector2 startingCord = current->boundry.cord;
-        current->boundry.cord += current->velocity * deltaT;
-        
-        for(int j = 0;j < i;j++)
+        Vector2 startingCord = current->rcord.GetCord();
+        if(current->inversemass != 0)
         {
-            if(isOverLapping(current->boundry,Entities[j]->boundry))
+            Vector2 totalStaticForce = current->forces[0] + current->forces[1];
+            Vector2 acceleration = current->velocity * -current->drag + totalStaticForce;
+            current->velocity += acceleration * deltaT;
+            current->rcord.pivot += current->velocity * deltaT;
+            
+            for(int j = 0;j < i;j++)
             {
-                simulateColidingEntity(current,Entities[j],deltaT);
+                if(isOverLapping(*current,*Entities[j]))
+                {
+                    simulateColidingEntity(current,Entities[j],deltaT);
+                }
             }
+            for(int j = i + 1;j < Entities.size();j++)
+            {
+                if(isOverLapping(*current,*Entities[j]))
+                {
+                    simulateColidingEntity(current,Entities[j],deltaT);
+                }
+            }
+            current->velocity = (current->rcord.GetCord() - startingCord) / deltaT;
+
+            if(std::abs(current->velocity.x) < 0.1f && std::abs(totalStaticForce.x) < 0.1f)
+                current->velocity.x = 0;
+            if(std::abs(current->velocity.y) < 0.1f && std::abs(totalStaticForce.y) < 0.1f)
+                current->velocity.y = 0;
         }
-        for(int j = i + 1;j < Entities.size();j++)
+
+        AABB startingBoundry = AABB(startingCord,current->size);
+        for(auto trigger : triggers)
         {
-            if(isOverLapping(current->boundry,Entities[j]->boundry))
-            {
-                simulateColidingEntity(current,Entities[j],deltaT);
-            }
+            //if(isOverLapping(startingBoundry,AABB(trigger->cord,trigger->size)))
+                trigger->CheckEntity(current);
         }
-        current->velocity = (current->boundry.cord - startingCord) / deltaT;
-        if(std::abs(current->velocity.x) < 0.1f && std::abs(totalStaticForce.x) < 0.1f)
-            current->velocity.x = 0;
-        if(std::abs(current->velocity.y) < 0.1f && std::abs(totalStaticForce.y) < 0.1f)
-            current->velocity.y = 0;
     }
+}
+bool isOverLapping(Entity& a,Entity& b)
+{
+    return isOverLapping(AABB(a.rcord.GetCord(),a.size),AABB(b.rcord.GetCord(),b.size));
+}
+bool isOverLapping(Entity& a,const AABB& b)
+{
+    return isOverLapping(AABB(a.rcord.GetCord(),a.size),b);
 }
 bool isOverLapping(const AABB& a,const AABB& b)
 {

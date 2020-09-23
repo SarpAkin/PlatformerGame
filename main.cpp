@@ -1,10 +1,10 @@
 #include <iostream>
 #include "src\Game.h"
 
-
-int main()
+ int main()
 {
     Game game;
-    if(game.Construct(512,512,1,1))
+    Vector2 v;
+    if(game.Construct(1024,1024,1,1))
         game.Start();
 }

@@ -6,15 +6,17 @@
 #include <vector>
 #include "Entity.h"
 #include "Vector2.h"
+#include "Collision_Trigger.h"
 
 class Game : public olc::PixelGameEngine
 {
 public:
 	std::vector<Entity*> Entities;
+	std::vector<Collision_Trigger*> Triggers;
 	Entity* player;
 	Vector2 CameraCord;
 	Vector2 pivot;
-	float TileSize = 16.0f;
+	float TileSize = 32.0f;
 public:
 	void DrawEntity(olc::Sprite*,Entity& e);
 	bool OnUserCreate() override;

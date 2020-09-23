@@ -1,6 +1,8 @@
 #ifndef Vector2_H
 #define Vector2_H
 
+#include <string>
+
 class Vector2;
 
 float distance(Vector2 a,Vector2 b);
@@ -56,22 +58,12 @@ public:
     {
         return *this / distance(*this,Vector2(0,0));
     }
+    inline std::string ToString()
+    {
+        return std::to_string(x) + " " + std::to_string(y);
+    }
 };
 
-struct Force
-{
-    Vector2 force;
-    Vector2 MaxSpeed;
-    Force(Vector2 f,Vector2 m)
-    {
-        force = f;
-        MaxSpeed = m;
-    }
-    Force()
-    {
-        
-    }
-};
 struct AABB
 {
     Vector2 cord;

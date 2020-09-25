@@ -1,10 +1,14 @@
 #include <iostream>
 #include "src\Game.h"
-
+#include "string"
  int main()
 {
     Game game;
-    Vector2 v;
+    std::cout << "Do you want to see triggerboxes?\n(y:n)\n";
+    std::string value;
+    std::cin >> value;
+    if(value == "y")
+        game.isTriggersVisible = true;
     if(game.Construct(1024,1024,1,1))
         game.Start();
 }

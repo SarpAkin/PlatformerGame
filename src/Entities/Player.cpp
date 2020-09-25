@@ -6,10 +6,48 @@ void Player::tick(Game& game,float elapsedTime)
 {
     //std::cout << "velocity : " << velocity.x << " " << velocity.y << std::endl;
     //std::cout << "cord :" << boundry.cord.x << " " << boundry.cord.y << std::endl;
+    bool isGrounded = jumpTrigger->CollidingEntities.size() > 0;
+    StaminaBar += elapsedTime;
+    if(StaminaBar > 1)
+        StaminaBar = 1;
+
     if(game.GetKey(olc::Key::SPACE).bPressed)
     {
-        if(jumpTrigger->CollidingEntities.size() > 0)
-            velocity.y -= 10;
+        if(wallJumpTriggers[left]->CollidingEntities.size() > 0)
+        {
+            
+        }
+    }
+    
+    if(isGrounded)
+    {
+        doubleJump = true;
+        if(game.GetKey(olc::Key::SPACE).bPressed)
+        {
+            velocity.y = -JumpVelocity;
+        }
+    }
+    else
+    {
+        if(game.GetKey(olc::Key::SPACE).bPressed && doubleJump)
+        {
+            doubleJump = false;
+            velocity.y = -JumpVelocity * 0.75f;
+        }
+    }
+
+    if(game.GetKey(olc::Key::SHIFT).bPressed && StaminaBar == 1)
+    {
+        if(game.GetKey(olc::Key::A).bHeld)
+        {
+            velocity.x = -dashVelocity; 
+            StaminaBar = 0;
+        }
+        else if(game.GetKey(olc::Key::D).bHeld)
+        {
+            velocity.x = dashVelocity;
+            StaminaBar = 0;
+        }
     }
 
     if(game.GetKey(olc::Key::A).bHeld)
@@ -29,8 +67,10 @@ Player::Player(Vector2 c,Vector2 s,Game& game)
 {
     rcord.SetCord(c);
     size = s;
-    std::cout <<"this " << this << std::endl;
-    jumpTrigger = new Collision_Trigger(RelativeVector(this,Vector2(0,size.y)),size);
+    jumpTrigger = new Collision_Trigger(RelativeVector(this,Vector2(0.1f,size.y)),Vector2(size.x - 0.2f,0.1f));
+    wallJumpTriggers[left] = new Collision_Trigger(RelativeVector(this,Vector2(-0.1f,0)),Vector2(0.1f,size.y));
+    wallJumpTriggers[right] = new Collision_Trigger(RelativeVector(this,Vector2(size.x,0)),Vector2(0.1f,size.y));
     game.Triggers.push_back(jumpTrigger);
-    std::cout << game.Triggers.size();
+    for(auto a : wallJumpTriggers)
+        game.Triggers.push_back(a);
 }

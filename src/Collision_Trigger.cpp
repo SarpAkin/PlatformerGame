@@ -9,7 +9,6 @@ void trigger::CheckEntity(Entity* e)
     //std::cout << e->cord.ToString() + " " + e->size.ToString() + " " + cord.ToString() + " " + size.ToString() << std::endl; 
     if(isOverLapping(*e,AABB(rcord.GetCord(),size)))
     {
-        std::cout << "someting is overlapping \n";
         for(Entity* o : CollidingEntities) 
         {
             if(e == o)
@@ -45,7 +44,6 @@ trigger::Collision_Trigger(RelativeVector rcord_,Vector2 size_)
 
 void trigger::OnCollisionEnter(Entity* e)
 {
-    std::cout << "something triggered this\n";
     //do nothing
 }
 

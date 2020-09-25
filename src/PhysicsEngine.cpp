@@ -4,7 +4,6 @@
 
 inline void simulateColidingEntity(Entity* current,Entity* other,float deltaT)
 {
-
     Vector2 cordDiff = current->GetMidPoint() - other->GetMidPoint();
     Vector2 sizeSum = (current->size + other->size) / 2;
     Vector2 AbsCollisionDepth = sizeSum - Vector2(std::abs(cordDiff.x),std::abs(cordDiff.y));
@@ -14,7 +13,7 @@ inline void simulateColidingEntity(Entity* current,Entity* other,float deltaT)
         if(cordDiff.y > 0)
             totalDisplacement.y = AbsCollisionDepth.y;
         else
-            totalDisplacement.y = -AbsCollisionDepth.y;
+            totalDisplacement.y = -AbsCollisionDepth.y; 
     else
         if(cordDiff.x > 0)
             totalDisplacement.x = AbsCollisionDepth.x;
@@ -50,7 +49,7 @@ void simulateEntities(std::vector<Entity*>& Entities,std::vector<Collision_Trigg
             current->velocity += acceleration * deltaT;
             current->rcord.pivot += current->velocity * deltaT;
             
-            for(int j = 0;j < i;j++)
+            for (int j = 0; j < i;j++)
             {
                 if(isOverLapping(*current,*Entities[j]))
                 {

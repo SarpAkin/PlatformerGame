@@ -16,6 +16,7 @@ public:
 	Entity* player;
 	Vector2 CameraCord;
 	Vector2 pivot;
+	bool isTriggersVisible = false;
 	float TileSize = 32.0f;
 public:
 	void DrawEntity(olc::Sprite*,Entity& e);

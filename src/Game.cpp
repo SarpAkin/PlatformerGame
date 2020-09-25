@@ -43,18 +43,19 @@ bool Game::OnUserUpdate(float fElapsedTime)
     {
         e->draw(*this);
     }
-    for(Collision_Trigger* t : Triggers)
-    {
-        Vector2 finalcord = (t->rcord.GetCord() - GetCamCord()) * TileSize;
-        //std::cout << t->rcord.GetCord().ToString() << std::endl;
-        Vector2 finalsize = t->size * TileSize;
+    if(isTriggersVisible)
+        for(Collision_Trigger* t : Triggers)
+        {
+            Vector2 finalcord = (t->rcord.GetCord() - GetCamCord()) * TileSize;
+            //std::cout << t->rcord.GetCord().ToString() << std::endl;
+            Vector2 finalsize = t->size * TileSize;
 
-        if(t->CollidingEntities.size() == 0)
-            DrawRect((int)finalcord.x,(int)finalcord.y,(int)finalsize.x,(int)finalsize.y,olc::GREEN);
-        else
-            DrawRect((int)finalcord.x,(int)finalcord.y,(int)finalsize.x,(int)finalsize.y,olc::YELLOW);
-        
-    }
+            if(t->CollidingEntities.size() == 0)
+                DrawRect((int)finalcord.x,(int)finalcord.y,(int)finalsize.x,(int)finalsize.y,olc::GREEN);
+            else
+                DrawRect((int)finalcord.x,(int)finalcord.y,(int)finalsize.x,(int)finalsize.y,olc::YELLOW);
+            
+        }
     return true;
 }
 

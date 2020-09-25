@@ -15,7 +15,13 @@ void Player::tick(Game& game,float elapsedTime)
     {
         if(wallJumpTriggers[left]->CollidingEntities.size() > 0)
         {
-            
+            velocity = Vector2(JumpVelocity * 0.75f,JumpVelocity * -0.4f);
+            goto postJump;
+        }
+        else if(wallJumpTriggers[right]->CollidingEntities.size() > 0)
+        {
+            velocity = Vector2(JumpVelocity * -0.75f,JumpVelocity * -0.4f);
+            goto postJump;
         }
     }
     
@@ -35,6 +41,8 @@ void Player::tick(Game& game,float elapsedTime)
             velocity.y = -JumpVelocity * 0.75f;
         }
     }
+
+    postJump:
 
     if(game.GetKey(olc::Key::SHIFT).bPressed && StaminaBar == 1)
     {

@@ -7,21 +7,39 @@ bool Game::OnUserCreate()
     pivot = Vector2(ScreenWidth(),ScreenHeight()) / 2;
 
 
-    Entities.push_back(new Player(Vector2(0,0),Vector2(1,1),*this));
+    Entities.push_back(new Player(Vector2(8,0),Vector2(1,1),*this));
     Entities[0]->setMass(1);
 
+    Entities.push_back(new Entity(Vector2(10,3),Vector2(1.5f,1.5f)));
+    Entities[1]->setMass(0.1f);
 
-    Triggers.push_back(new Collision_Trigger(Vector2(-3,5),Vector2(3,3)));
+
+    //Triggers.push_back(new Collision_Trigger(Vector2(-3,5),Vector2(3,3)));
 
     player = Entities[0];
     player->drag = .8f;
     //std::cout << CameraCord->x;
-    Entities.push_back(new Entity(Vector2(-5,10),Vector2(30,3)));
-    Entities[1]->setMass(0);
-    Entities[1]->forces[0] = Vector2(0,0);
 
-    Entities.push_back(new Entity(Vector2(10,3),Vector2(1.5f,1.5f)));
-    Entities[2]->setMass(0.1f);
+    {
+        Entity* e = new Entity(Vector2(0,10),Vector2(30,3));
+        Entities.push_back(e);
+        e->setMass(0);
+        e->forces[0] = Vector2(0,0);
+    }
+    
+    {
+        Entity* e = new Entity(Vector2(0,0),Vector2(1,10));
+        Entities.push_back(e);
+        e->setMass(0);
+        e->forces[0] = Vector2(0,0);
+    }
+
+    {
+        Entity* e = new Entity(Vector2(29,0),Vector2(1,10));
+        Entities.push_back(e);
+        e->setMass(0);
+        e->forces[0] = Vector2(0,0);
+    }
 
     return true;
 }

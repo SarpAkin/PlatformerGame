@@ -7,13 +7,14 @@
 #include "Entity.h"
 #include "Vector2.h"
 #include "Collision_Trigger.h"
-
+#include "Entities\Player.h"
+#include "Entities\Player.h"
 class Game : public olc::PixelGameEngine
 {
 public:
 	std::vector<Entity*> Entities;
 	std::vector<Collision_Trigger*> Triggers;
-	Entity* player;
+	Player* player;
 	Vector2 CameraCord;
 	Vector2 pivot;
 	bool isTriggersVisible = false;

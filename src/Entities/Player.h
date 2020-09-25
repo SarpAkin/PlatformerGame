@@ -1,3 +1,6 @@
+#ifndef Player_H
+#define Player_H
+
 #include "..\Entity.h"
 #include "..\Collision_Trigger.h"
 
@@ -22,3 +25,5 @@ class Player : public Entity
     void tick(Game& game,float elapsedTime) override;
     void draw(Game& game) override;
 };
+
+#endif

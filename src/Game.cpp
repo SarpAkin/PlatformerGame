@@ -1,6 +1,6 @@
 #include "Game.h"
 #include "PhysicsEngine.h"
-#include "Entities\Player.h"
+//#include "Entities\Player.h"
 bool Game::OnUserCreate()
 {
     sAppName = "PlatformerGame";
@@ -16,7 +16,7 @@ bool Game::OnUserCreate()
 
     //Triggers.push_back(new Collision_Trigger(Vector2(-3,5),Vector2(3,3)));
 
-    player = Entities[0];
+    player = dynamic_cast<Player*>(Entities[0]);
     player->drag = .8f;
     //std::cout << CameraCord->x;
 
@@ -46,6 +46,7 @@ bool Game::OnUserCreate()
 
 bool Game::OnUserUpdate(float fElapsedTime)
 {
+    
     //ticking
     for(Entity* e : Entities)
     {
@@ -56,7 +57,7 @@ bool Game::OnUserUpdate(float fElapsedTime)
     //Rendering
     CameraCord = player->GetMidPoint();
     FillRect(0,0,ScreenWidth(),ScreenWidth(),olc::BLACK);
-    DrawRect(0,0,5,5,olc::GREY);
+    FillRect(2,2,(int)(player->StaminaBar * 40),5,olc::DARK_GREEN);
     for(Entity* e : Entities)
     {
         e->draw(*this);
@@ -74,6 +75,7 @@ bool Game::OnUserUpdate(float fElapsedTime)
                 DrawRect((int)finalcord.x,(int)finalcord.y,(int)finalsize.x,(int)finalsize.y,olc::YELLOW);
             
         }
+        
     return true;
 }
 

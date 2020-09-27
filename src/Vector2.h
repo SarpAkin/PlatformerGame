@@ -81,5 +81,18 @@ struct AABB
     {
         return cord + size / 2;
     }
+    void FixBoundry()
+    {
+        if(size.x < 0)
+        {
+            cord.x += size.x;
+            size.x = -size.x; 
+        }
+        if(size.y < 0)
+        {
+            cord.y += size.y;
+            size.y = -size.y; 
+        }
+    }
 };
 #endif

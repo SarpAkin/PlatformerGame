@@ -4,7 +4,7 @@
 		{
 			"type": "shell",
 			"label": "C/C++: g++.exe build active file",
-			"command": "g++ -o game.exe  main.cpp src/*.cpp ./src/Entities/*.cpp dependencies/*.cpp -luser32 -lgdi32 -lopengl32 -lgdiplus -lShlwapi -ldwmapi -lstdc++fs -static -std=c++17",
+			"command": "g++ -o ./Game/game.exe  main.cpp src/*.cpp ./src/Entities/*.cpp dependencies/*.cpp -luser32 -lgdi32 -lopengl32 -lgdiplus -lShlwapi -ldwmapi -lstdc++fs -static -std=c++17",
 			"problemMatcher": [
 				"$gcc"
 			],

@@ -1,6 +1,11 @@
 #include "Game.h"
+
+#include <fstream>
+#include <string>
+
 #include "PhysicsEngine.h"
-//#include "Entities\Player.h"
+#include "ClassParser.h"
+
 bool Game::OnUserCreate()
 {
     sAppName = "PlatformerGame";
@@ -10,36 +15,35 @@ bool Game::OnUserCreate()
     Entities.push_back(new Player(Vector2(8,0),Vector2(1,1),*this));
     Entities[0]->setMass(1);
 
-    Entities.push_back(new Entity(Vector2(10,3),Vector2(1.5f,1.5f)));
-    Entities[1]->setMass(0.1f);
+    std::ifstream ifs = std::ifstream("Map.txt");
+    if(ifs.is_open())
+    {
+        std::string content = std::string((std::istreambuf_iterator<char>(ifs)), (std::istreambuf_iterator<char>()));
+        int size = content.length() / sizeof(AABB);
+        for(int i = 0;i < size;i++)
+        {
+            std::array<char,sizeof(AABB)> arr;
+            int string_pos = i * sizeof(AABB);
+            for(int j = 0;j < sizeof(AABB);j++)
+            {
+                arr[j] = content[string_pos + j];
+            }
+            AABB wall = ParseToClass<AABB>(arr);
+            Entity* e = new Entity(wall.cord,wall.size);
+            Entities.push_back(e);
+            e->setMass(0);
+            e->forces[0] = Vector2(0,0);
+        }
+    }
+    player = dynamic_cast<Player*>(Entities[0]);
+    player->drag = .8f;
+
+    
 
 
     //Triggers.push_back(new Collision_Trigger(Vector2(-3,5),Vector2(3,3)));
 
-    player = dynamic_cast<Player*>(Entities[0]);
-    player->drag = .8f;
     //std::cout << CameraCord->x;
-
-    {
-        Entity* e = new Entity(Vector2(0,10),Vector2(30,3));
-        Entities.push_back(e);
-        e->setMass(0);
-        e->forces[0] = Vector2(0,0);
-    }
-    
-    {
-        Entity* e = new Entity(Vector2(0,0),Vector2(1,10));
-        Entities.push_back(e);
-        e->setMass(0);
-        e->forces[0] = Vector2(0,0);
-    }
-
-    {
-        Entity* e = new Entity(Vector2(29,0),Vector2(1,10));
-        Entities.push_back(e);
-        e->setMass(0);
-        e->forces[0] = Vector2(0,0);
-    }
 
     return true;
 }

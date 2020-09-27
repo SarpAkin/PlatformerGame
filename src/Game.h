@@ -9,6 +9,11 @@
 #include "Collision_Trigger.h"
 #include "Entities\Player.h"
 #include "Entities\Player.h"
+
+
+const float MaxTileSize = 128;
+const float MinTileSize = 4;
+
 class Game : public olc::PixelGameEngine
 {
 public:
@@ -27,6 +32,15 @@ public:
 	inline Vector2 GetCamCord()
 	{
 		return CameraCord - pivot / TileSize;
+	}
+	inline Vector2 ScreenCordToLocal(int x,int y)
+	{
+		return GetCamCord() + Vector2(x,y) / TileSize;
+	}
+	inline olc::vi2d LocalCordToScreen(Vector2 v)
+	{
+		Vector2 final = (v - GetCamCord()) * TileSize;
+		return olc::vi2d((int32_t)final.x,(int32_t)final.y);
 	}
 };
 

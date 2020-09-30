@@ -92,7 +92,7 @@ bool Game::OnUserDestroy()
     return true;
 }
 
-void Game::DrawEntity(olc::Sprite* s,Entity& e)
+void Game::DrawEntity(olc::Decal* s,Entity& e)
 {
 
 }

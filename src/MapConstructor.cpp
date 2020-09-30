@@ -10,6 +10,8 @@
 
 bool Map::OnUserCreate()
 {
+    pivot = Vector2(ScreenWidth(),ScreenHeight()) / 2;
+
     std::ifstream ifs = std::ifstream("Map.txt");
     if(ifs.is_open())
     {

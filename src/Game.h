@@ -25,7 +25,7 @@ public:
 	bool isTriggersVisible = false;
 	float TileSize = 32.0f;
 public:
-	void DrawEntity(olc::Sprite*,Entity& e);
+	void DrawEntity(olc::Decal*,Entity& e);
 	bool OnUserCreate() override;
 	bool OnUserUpdate(float fElapsedTime) override;
 	bool OnUserDestroy() override;
